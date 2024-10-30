@@ -14,11 +14,13 @@ import com.capgemini.polytech.mappers.UtilisateurMapper;
 import com.capgemini.polytech.repositories.BoiteRepository;
 import com.capgemini.polytech.repositories.ReservationRepository;
 import com.capgemini.polytech.repositories.UtilisateurRepository;
-import jakarta.persistence.EntityNotFoundException;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class ReservationService {
@@ -59,12 +61,11 @@ public class ReservationService {
         return reservation;
     }
 
-    public ReservationDto getResevationById(int uid, int bid) {
-        ReservationId reservationId = new ReservationId();
-        reservationId.setBoiteId(bid);
-        reservationId.setUtilisateurId(uid);
-        return reservationMapper.toDTO(reservationRepository.getReferenceById(reservationId));
-    }
+    public ReservationDto getReservationById(ReservationId reservationId) {
+    return reservationRepository.findById(reservationId)
+            .map(reservationMapper::toDTO)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reservation not found"));
+}
 
     public ReservationDto convertReservationIdsDTOtoReservationDTO(ReservationIdsDto reservationIdsDTO) {
         ReservationDto reservationDTO = new ReservationDto();
@@ -80,25 +81,26 @@ public class ReservationService {
 
     // Création d'une nouvelle réservation
     public ReservationDto createReservation(ReservationDto reservationDTO) {
-        // Create the composite key
+
         ReservationId reservationId = new ReservationId();
         reservationId.setBoiteId(reservationDTO.getBoite().getId());
         reservationId.setUtilisateurId(reservationDTO.getUtilisateur().getId());
-
-        // Map DTO to entity
-        Reservation reservation = new Reservation();
-        reservation.setId(reservationId); // Set the composite key
-        reservation.setReservation(reservationDTO.getReservation()); // Set the reservation/quantity
-
-        // Fetch Utilisateur and Boite from DB if necessary
+    
+        if (reservationRepository.existsById(reservationId)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Reservation already exists");
+        }
+    
+        // Fetch Utilisateur and Boite from DB, handle case where either may be missing
         Utilisateur utilisateur = utilisateurRepository.findById(reservationId.getUtilisateurId())
-                .orElseThrow(() -> new EntityNotFoundException("Utilisateur not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur not found"));
         Boite boite = boiteRepository.findById(reservationId.getBoiteId())
-                .orElseThrow(() -> new EntityNotFoundException("Boite not found"));
-
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Boite not found"));
+    
+        Reservation reservation = reservationMapper.toEntity(reservationDTO);
+        reservation.setId(reservationId);
         reservation.setUtilisateur(utilisateur);
         reservation.setBoite(boite);
-
+    
         reservationRepository.save(reservation);
 
         return reservationMapper.toDTO(reservation);
