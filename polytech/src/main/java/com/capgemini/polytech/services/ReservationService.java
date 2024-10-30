@@ -56,10 +56,7 @@ public class ReservationService {
                 .collect(Collectors.toList());
     }
 
-    public ReservationDto getResevationById(ReservationId reservationId) {
-        ReservationDto reservation = reservationMapper.toDTO(reservationRepository.getReferenceById(reservationId));
-        return reservation;
-    }
+    
 
     public ReservationDto getReservationById(ReservationId reservationId) {
     return reservationRepository.findById(reservationId)

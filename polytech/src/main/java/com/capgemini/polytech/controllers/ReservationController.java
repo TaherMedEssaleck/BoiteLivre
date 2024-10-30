@@ -28,7 +28,7 @@ public class ReservationController {
 
     @GetMapping("id")
     public ResponseEntity<ReservationDto> getReservationById(@RequestBody ReservationId id){
-        ReservationDto reservation = reservationService.getResevationById(id);
+        ReservationDto reservation = reservationService.getReservationById(id);
         return ResponseEntity.ok(reservation);
     }
    
