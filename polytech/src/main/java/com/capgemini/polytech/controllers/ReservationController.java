@@ -1,6 +1,5 @@
 package com.capgemini.polytech.controllers;
 
-
 import com.capgemini.polytech.dto.ReservationDto;
 import com.capgemini.polytech.dto.ReservationIdsDto;
 import com.capgemini.polytech.models.ReservationId;
@@ -19,19 +18,17 @@ public class ReservationController {
     @Autowired
     private ReservationService reservationService;
 
-
     @GetMapping("all")
-    public ResponseEntity<List<ReservationDto>> getAllReservations(){
+    public ResponseEntity<List<ReservationDto>> getAllReservations() {
         List<ReservationDto> reservations = reservationService.getAllReservations();
         return ResponseEntity.ok(reservations);
     }
 
     @GetMapping("id")
-    public ResponseEntity<ReservationDto> getReservationById(@RequestBody ReservationId id){
+    public ResponseEntity<ReservationDto> getReservationById(@RequestBody ReservationId id) {
         ReservationDto reservation = reservationService.getReservationById(id);
         return ResponseEntity.ok(reservation);
     }
-   
 
     // Endpoint pour créer une nouvelle réservation
     @PostMapping("create")
@@ -42,7 +39,7 @@ public class ReservationController {
 
     @PostMapping("create/ids")
     public ResponseEntity<ReservationDto> createReservation(@RequestBody ReservationIdsDto reservationIdsDTO) {
-        ReservationDto reservationDTO = reservationService.convertReservationIdsDTOtoReservationDTO (reservationIdsDTO);
+        ReservationDto reservationDTO = reservationService.convertReservationIdsDTOtoReservationDTO(reservationIdsDTO);
         ReservationDto createdReservation = reservationService.createReservation(reservationDTO);
         return ResponseEntity.ok(createdReservation);
     }
@@ -50,7 +47,7 @@ public class ReservationController {
     // Endpoint to update an existing reservation
     @PutMapping("update")
     public ResponseEntity<ReservationDto> updateReservation(@RequestBody ReservationIdsDto reservationIdsDTO) {
-        ReservationDto reservationDTO = reservationService.convertReservationIdsDTOtoReservationDTO (reservationIdsDTO);
+        ReservationDto reservationDTO = reservationService.convertReservationIdsDTOtoReservationDTO(reservationIdsDTO);
         ReservationDto updatedReservation = reservationService.updateReservation(reservationDTO);
         return ResponseEntity.ok(updatedReservation);
     }
@@ -62,5 +59,4 @@ public class ReservationController {
         return ResponseEntity.noContent().build();
     }
 
-    
 }

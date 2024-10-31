@@ -3,6 +3,8 @@ package com.capgemini.polytech.services;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.capgemini.polytech.dto.ReservationDto;
 import com.capgemini.polytech.dto.UtilisateurCreateDto;
@@ -22,7 +24,9 @@ public class UtilisateurService {
     private UtilisateurMapper utilisateurMapper;
 
     public UtilisateurDto getUtilisateurById(Integer id) {
-        return utilisateurMapper.toDTO(utilisateurRepository.getReferenceById(id));
+        return utilisateurRepository.findById(id)
+                .map(utilisateurMapper::toDTO)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur not found"));
     }
 
     public List<UtilisateurDto> getAllUtilisateurs() {
@@ -30,39 +34,53 @@ public class UtilisateurService {
     }
 
     public UtilisateurDto createUtilisateur(UtilisateurCreateDto utilisateurcreated) {
-        Utilisateur utilisateur = utilisateurMapper.toEntity(utilisateurcreated);
-        Utilisateur savedUtilisateur = utilisateurRepository.save(utilisateur);
-        return utilisateurMapper.toDTO(savedUtilisateur);
+
+        if (utilisateurRepository.existsById(utilisateurcreated.getId())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Utilisateur already exists");
+        }
+        try {
+            Utilisateur utilisateur = utilisateurMapper.toEntity(utilisateurcreated);
+            Utilisateur savedUtilisateur = utilisateurRepository.save(utilisateur);
+            return utilisateurMapper.toDTO(savedUtilisateur);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to create utilisateur", e);
+        }
     }
 
     public UtilisateurDto updateUtilisateur(UtilisateurDto utilisateurDTO) {
-        Utilisateur existingUtilisateur = utilisateurRepository
-                .getReferenceById(utilisateurMapper.toEntity(utilisateurDTO).getId());
-        existingUtilisateur.setNom(utilisateurMapper.toEntity(utilisateurDTO).getNom());
-        existingUtilisateur.setPrenom(utilisateurMapper.toEntity(utilisateurDTO).getPrenom());
-        existingUtilisateur.setMail(utilisateurMapper.toEntity(utilisateurDTO).getMail());
-        existingUtilisateur.setUsername(utilisateurMapper.toEntity(utilisateurDTO).getUsername());
-        Utilisateur savedUtilisateur = utilisateurRepository.save(existingUtilisateur);
-        return utilisateurMapper.toDTO(savedUtilisateur);
+        Utilisateur utilisateur = utilisateurMapper.toEntity(utilisateurDTO);
+        return utilisateurRepository.findById(utilisateur.getId())
+                .map(existingUtilisateur -> {
+                    existingUtilisateur.setNom(utilisateur.getNom());
+                    existingUtilisateur.setPrenom(utilisateur.getPrenom());
+                    existingUtilisateur.setMail(utilisateur.getMail());
+                    existingUtilisateur.setUsername(utilisateur.getUsername());
+                    Utilisateur savedUtilisateur = utilisateurRepository.save(existingUtilisateur);
+                    return utilisateurMapper.toDTO(savedUtilisateur);
+                })
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur not found"));
     }
 
     public UtilisateurDto updateUtilisateurPassword(Integer id, String password) {
-        Utilisateur existingUtilisateur = utilisateurRepository.getReferenceById(id);
-        existingUtilisateur.setPassword(password);
-        Utilisateur savedUtilisateur = utilisateurRepository.save(existingUtilisateur);
-        return utilisateurMapper.toDTO(savedUtilisateur);
+        return utilisateurRepository.findById(id)
+                .map(existingUtilisateur -> {
+                    existingUtilisateur.setPassword(password);
+                    Utilisateur savedUtilisateur = utilisateurRepository.save(existingUtilisateur);
+                    return utilisateurMapper.toDTO(savedUtilisateur);
+                })
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur not found"));
     }
 
     public void deleteUtilisateur(Integer id) {
-        Utilisateur existingUtilisateur = utilisateurRepository.getReferenceById(id);
-        utilisateurRepository.delete(existingUtilisateur);
+        if (!utilisateurRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur not found");
+        }
+        utilisateurRepository.deleteById(id);
     }
 
     public UtilisateurReservationResponseDto createUtilisateurReservationResponse(UtilisateurDto utilisateur,
             List<ReservationDto> reservationDTOs) {
-        UtilisateurReservationResponseDto utilisateurReservations = new UtilisateurReservationResponseDto(utilisateur,
-                reservationDTOs);
-        return utilisateurReservations;
+        return new UtilisateurReservationResponseDto(utilisateur, reservationDTOs);
     }
 
 }

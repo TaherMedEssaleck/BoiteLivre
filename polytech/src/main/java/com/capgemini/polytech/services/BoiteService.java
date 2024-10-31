@@ -11,7 +11,6 @@ import com.capgemini.polytech.mappers.BoiteMapper;
 import com.capgemini.polytech.models.Boite;
 import com.capgemini.polytech.repositories.BoiteRepository;
 
-
 @Service
 public class BoiteService {
 
@@ -25,16 +24,15 @@ public class BoiteService {
         return boiteMapper.toDTO(boiteRepository.findAll());
     }
 
-
     public BoiteDto getBoiteById(Integer id) {
         return boiteRepository.findById(id)
-                .map(boiteMapper::toDTO)
-
-
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Boite not found"));
+                .map(boiteMapper::toDTO).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Boite not found"));
     }
 
     public BoiteDto createBoite(BoiteDto boiteDTO) {
+        if (boiteRepository.existsById(boiteDTO.getId())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Utilisateur already exists");
+        }
         Boite boite = boiteMapper.toEntity(boiteDTO);
         Boite savedBoite = boiteRepository.save(boite);
         return boiteMapper.toDTO(savedBoite);
@@ -49,13 +47,8 @@ public class BoiteService {
                     existingBoite.setPointGeo(boite.getPointGeo());
                     existingBoite.setQuantite(boite.getQuantite());
                     return boiteMapper.toDTO(boiteRepository.save(existingBoite));
-                })
-
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Boite not found"));
+                }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Boite not found"));
     }
-
-    
-
 
     public void deleteBoite(Integer id) {
         if (!boiteRepository.existsById(id)) {
@@ -63,7 +56,6 @@ public class BoiteService {
 
         }
         boiteRepository.deleteById(id);
-
 
     }
 }

@@ -14,9 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.capgemini.polytech.dto.BoiteDto;
 import com.capgemini.polytech.services.BoiteService;
 
-
 import lombok.AllArgsConstructor;
-
 
 @AllArgsConstructor
 @RestController
@@ -26,20 +24,18 @@ public class BoiteController {
     @Autowired
     private BoiteService boiteService;
 
-
     @GetMapping("{id}")
     public ResponseEntity<BoiteDto> getBoiteById(@PathVariable Integer id) {
-        BoiteDto boite= boiteService.getBoiteById(id);
+        BoiteDto boite = boiteService.getBoiteById(id);
         return ResponseEntity.ok(boite);
     }
 
-     @GetMapping("all")
+    @GetMapping("all")
     public ResponseEntity<List<BoiteDto>> getAllUtilisateurs() {
         List<BoiteDto> utilisateurs = boiteService.getAllBoites();
         return ResponseEntity.ok(utilisateurs);
     }
 
-    
     @PostMapping("create")
     public ResponseEntity<BoiteDto> createBoite(@RequestBody BoiteDto boiteDTO) {
         BoiteDto createdBoite = boiteService.createBoite(boiteDTO);
@@ -47,13 +43,13 @@ public class BoiteController {
     }
 
     @PutMapping("update")
-    public ResponseEntity<BoiteDto> updateUtilisateur(@RequestBody BoiteDto boiteDTO) {
+    public ResponseEntity<BoiteDto> updateBoite(@RequestBody BoiteDto boiteDTO) {
         BoiteDto updatedBoite = boiteService.updateBoite(boiteDTO);
         return ResponseEntity.ok(updatedBoite);
     }
 
-     @DeleteMapping("delete/{id}")
-    public ResponseEntity<Void> deleteUtilisateur(@PathVariable Integer id) {
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity<Void> deleteBoite(@PathVariable Integer id) {
         boiteService.deleteBoite(id);
         return ResponseEntity.noContent().build();
     }
