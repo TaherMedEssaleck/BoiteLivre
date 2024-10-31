@@ -8,8 +8,6 @@ public class PolytechApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(PolytechApplication.class, args);
-
-		System.out.println("hello");
 	}
 
 }
