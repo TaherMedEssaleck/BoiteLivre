@@ -56,7 +56,7 @@ public class ReservationService {
                 .map(reservationMapper::toDTO)
                 .collect(Collectors.toList());
     }
-
+    
     public ReservationDto getReservationById(ReservationId reservationId) {
         return reservationRepository.findById(reservationId)
                 .map(reservationMapper::toDTO)
@@ -87,7 +87,7 @@ public class ReservationService {
         }
 
         Utilisateur utilisateur = utilisateurRepository.findById(reservationId.getUtilisateurId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Utilisateur not found"));
         Boite boite = boiteRepository.findById(reservationId.getBoiteId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Boite not found"));
 
