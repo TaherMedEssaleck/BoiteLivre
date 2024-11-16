@@ -1,3 +1,4 @@
+import { Boite } from "./boite.model";
 import { Utilisateur } from "./utilisateur.model";
 
 interface Reservation {

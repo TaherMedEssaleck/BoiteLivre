@@ -1,4 +1,3 @@
-
 export interface Boite{
       id:number | null | undefined;
       nom:string;
