@@ -1,7 +1,9 @@
-export interface Boite{
-      id:number | null | undefined;
-      nom:string;
-      quantite:number;
-      description:string;
-      poGeo:string;
-}
+// boite.model.ts
+export class Boite {
+      constructor(
+        public id: number | null,
+        public name: string,
+        public description: string
+      ) {}
+    }
+    

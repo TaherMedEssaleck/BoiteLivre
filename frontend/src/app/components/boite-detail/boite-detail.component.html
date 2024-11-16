@@ -1,0 +1,18 @@
+<div class="boite-detail-container">
+    <h2>{{ boite.id === 0 ? 'Create' : 'Edit' }} Boite</h2>
+    <form (ngSubmit)="saveBoite()">
+      <div>
+        <label for="name">Name</label>
+        <input type="text" id="name" [(ngModel)]="boite.name" name="name" required />
+      </div>
+      <div>
+        <label for="description">Description</label>
+        <input type="text" id="description" [(ngModel)]="boite.description" name="description" />
+      </div>
+      <div>
+        <button type="submit">{{ boite.id === 0 ? 'Create' : 'Save' }}</button>
+        <button type="button" (click)="cancel()">Cancel</button>
+      </div>
+    </form>
+  </div>
+  

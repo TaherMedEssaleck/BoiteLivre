@@ -1,0 +1,13 @@
+<div class="boite-container">
+    <h2>Boites</h2>
+    <button (click)="router.navigate(['/boites/create'])">Create New Boite</button>
+    <ul>
+      <li *ngFor="let boite of boites">
+        <h3>{{ boite.name }}</h3>
+        <p>{{ boite.description }}</p>
+        <button (click)="viewBoite(boite.id)">View</button>
+        <button (click)="deleteBoite(boite.id)">Delete</button>
+      </li>
+    </ul>
+  </div>
+  
