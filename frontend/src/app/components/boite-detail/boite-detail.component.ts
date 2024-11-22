@@ -2,15 +2,18 @@ import { Component, OnInit } from "@angular/core";
 import { BoiteService } from "../../services/boite.service";
 import { Router } from "@angular/router";
 import { Boite } from "../../models/boite.model";
+import { FormsModule } from '@angular/forms';  // Importer FormsModule
 
 @Component({
   selector: 'app-boite-detail',
+  standalone: true,
+  imports: [FormsModule],  // Ajouter FormsModule dans imports
   templateUrl: './boite-detail.component.html',
   styleUrls: ['./boite-detail.component.css']
 })
 export class BoiteDetailComponent implements OnInit {
-  boite: Boite = { id: null, name: '', description: '' };  // Provide default values
-  
+  boite: Boite = { id: null, name: '', description: '' };
+
   constructor(private boiteService: BoiteService, private router: Router) {}
 
   ngOnInit(): void {
