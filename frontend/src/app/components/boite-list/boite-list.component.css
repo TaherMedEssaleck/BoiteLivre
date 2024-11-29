@@ -1,0 +1,17 @@
+table {
+    width: 60%;
+
+  }
+  
+  .mat-elevation-z8 {
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  th.mat-header-cell {
+    font-weight: bold;
+  }
+  
+  td.mat-cell {
+    text-align: left;
+  }
+  
