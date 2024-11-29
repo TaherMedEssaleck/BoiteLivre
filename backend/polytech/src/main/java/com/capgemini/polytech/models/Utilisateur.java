@@ -1,5 +1,7 @@
 package com.capgemini.polytech.models;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,9 +29,15 @@ public class Utilisateur {
     @Column(nullable = false, length = 100)
     private String mail;
 
-    @Column(name = "password",nullable = false, length = 100)
+    @Column(nullable = false, length = 100)
     private String password;
 
     @Column(nullable = false, length = 100)
     private String username;
+
+    @Column(nullable = false, length = 100)
+    private String role;
+
+    @OneToMany(mappedBy="utilisateur", fetch = FetchType.EAGER)
+    private List<Reservation> reservations;
 }

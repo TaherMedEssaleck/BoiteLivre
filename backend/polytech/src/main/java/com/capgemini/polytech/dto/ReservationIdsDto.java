@@ -13,10 +13,10 @@ import lombok.NoArgsConstructor;
 public class ReservationIdsDto {
 
 
-    @Column(name="utilisateur_id")
-    private int utilisateurId;
-    @Column(name="boite_id")
-    private int boiteId;
+    @Column(name="utilisateur")
+    private int utilisateur;
+    @Column(name="boite")
+    private int boite;
     @Column(nullable = false, name = "reservation")
     private int reservation;
 }

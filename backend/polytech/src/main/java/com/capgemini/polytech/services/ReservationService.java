@@ -64,9 +64,9 @@ public class ReservationService {
     }
 
     public ReservationDto convertReservationIdsDTOtoReservationDTO(ReservationIdsDto reservationIdsDTO) {
-        Utilisateur utilisateur = utilisateurRepository.findById(reservationIdsDTO.getUtilisateurId())
+        Utilisateur utilisateur = utilisateurRepository.findById(reservationIdsDTO.getUtilisateur())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur not found"));
-        Boite boite = boiteRepository.findById(reservationIdsDTO.getBoiteId())
+        Boite boite = boiteRepository.findById(reservationIdsDTO.getBoite())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Boite not found"));
 
         ReservationDto reservationDTO = new ReservationDto();
@@ -79,16 +79,16 @@ public class ReservationService {
     public ReservationDto createReservation(ReservationDto reservationDTO) {
 
         ReservationId reservationId = new ReservationId();
-        reservationId.setBoiteId(reservationDTO.getBoite().getId());
-        reservationId.setUtilisateurId(reservationDTO.getUtilisateur().getId());
+        reservationId.setBoite(reservationDTO.getBoite().getId());
+        reservationId.setUtilisateur(reservationDTO.getUtilisateur().getId());
 
         if (reservationRepository.existsById(reservationId)) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Reservation already exists");
         }
 
-        Utilisateur utilisateur = utilisateurRepository.findById(reservationId.getUtilisateurId())
+        Utilisateur utilisateur = utilisateurRepository.findById(reservationId.getUtilisateur())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Utilisateur not found"));
-        Boite boite = boiteRepository.findById(reservationId.getBoiteId())
+        Boite boite = boiteRepository.findById(reservationId.getBoite())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Boite not found"));
 
         Reservation reservation = reservationMapper.toEntity(reservationDTO);
@@ -103,8 +103,8 @@ public class ReservationService {
 
     public ReservationDto updateReservation(ReservationDto reservationDTO) {
         ReservationId id = new ReservationId();
-        id.setBoiteId(reservationDTO.getBoite().getId());
-        id.setUtilisateurId(reservationDTO.getUtilisateur().getId());
+        id.setBoite(reservationDTO.getBoite().getId());
+        id.setUtilisateur(reservationDTO.getUtilisateur().getId());
         return reservationRepository.findById(id)
                 .map(existingReservation -> {
                     existingReservation.setReservation(reservationDTO.getReservation());

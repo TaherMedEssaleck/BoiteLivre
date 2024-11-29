@@ -55,6 +55,7 @@ public class UtilisateurService {
                     existingUtilisateur.setPrenom(utilisateur.getPrenom());
                     existingUtilisateur.setMail(utilisateur.getMail());
                     existingUtilisateur.setUsername(utilisateur.getUsername());
+                    existingUtilisateur.setRole(utilisateur.getRole());
                     Utilisateur savedUtilisateur = utilisateurRepository.save(existingUtilisateur);
                     return utilisateurMapper.toDTO(savedUtilisateur);
                 })

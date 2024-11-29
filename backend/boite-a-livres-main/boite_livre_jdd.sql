@@ -1,5 +1,4 @@
-
-INSERT INTO `boite` VALUES 
+INSERT INTO boite (id,nom,quantite,description,point_geo) VALUES 
 (38,"Boite à lire du CEST",12,"CEST (Centre d'Education Sportive de Tours)","47.3903436256, 0.6961206773"),
 (39,"Borne Livr'Libre Savonnières",21,"","47.3484316, 0.5469802004"),
 (40,"Borne Livr' Libre Oratoire",13,"La Fabrique de Livres","47.412287683, 0.6982528837"),

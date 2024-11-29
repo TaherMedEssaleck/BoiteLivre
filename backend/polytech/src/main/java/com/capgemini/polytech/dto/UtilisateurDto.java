@@ -13,4 +13,5 @@ public class UtilisateurDto {
     private String prenom;
     private String mail;
     private String username;
+    private String role;
 }

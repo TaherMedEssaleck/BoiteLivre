@@ -6,6 +6,6 @@ import java.io.Serializable;
 @Data
 public class ReservationId implements Serializable {
 
-    private int utilisateurId;
-    private int boiteId;
+    private int utilisateur;
+    private int boite;
 }

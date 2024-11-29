@@ -14,6 +14,7 @@ public class UtilisateurCreateDto {
     private String mail;
     private String username;
     private String password;
+    private String role;
     
         // Getters et Setters
     }
