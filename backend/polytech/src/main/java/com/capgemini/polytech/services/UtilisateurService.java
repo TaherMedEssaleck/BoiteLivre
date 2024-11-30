@@ -82,6 +82,7 @@ public class UtilisateurService {
                     existingUtilisateur.setPrenom(utilisateur.getPrenom());
                     existingUtilisateur.setMail(utilisateur.getMail());
                     existingUtilisateur.setUsername(utilisateur.getUsername());
+                    existingUtilisateur.setRoles(utilisateur.getRoles());
                     Utilisateur savedUtilisateur = utilisateurRepository.save(existingUtilisateur);
                     return utilisateurMapper.toDTO(savedUtilisateur);
                 })

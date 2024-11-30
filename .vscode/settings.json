@@ -1,6 +1,6 @@
 {
     "java.configuration.updateBuildConfiguration": "automatic", // Automatically updates the build config
-    "java.debug.settings.onBuildFailureProceed": false,         // Prevent debugging if the build fails
+    "java.debug.settings.onBuildFailureProceed": true,         // Prevent debugging if the build fails
     "java.errors.incompleteClasspath.severity": "error",        // Highlights incomplete classpaths as errors
     "java.format.settings.url": ".vscode/formatter.xml",        // Optional: Custom code formatter config
     "java.format.settings.profile": "GoogleStyle",              // Optional: Apply a specific formatting style

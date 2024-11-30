@@ -2,6 +2,7 @@ package com.capgemini.polytech.models;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.List;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -27,7 +28,7 @@ public class Utilisateur {
     @Column(nullable = false, length = 100)
     private String mail;
 
-    @Column(name = "password", nullable = false, length = 100)
+    @Column(nullable = false, length = 100)
     private String password;
 
     @Column(nullable = false, length = 100)
@@ -35,4 +36,6 @@ public class Utilisateur {
     @ManyToMany(fetch = FetchType.EAGER) // Fetch roles eagerly for security checks
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
+    @OneToMany(mappedBy="utilisateur", fetch = FetchType.EAGER)
+    private List<Reservation> reservations;
 }

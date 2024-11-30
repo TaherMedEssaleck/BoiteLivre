@@ -1,6 +1,9 @@
 package com.capgemini.polytech.dto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 
 @Data
@@ -13,4 +16,5 @@ public class UtilisateurDto {
     private String prenom;
     private String mail;
     private String username;
+    private List<String> role;
 }

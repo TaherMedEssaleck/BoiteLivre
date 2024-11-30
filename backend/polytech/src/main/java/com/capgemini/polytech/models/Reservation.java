@@ -17,13 +17,13 @@ public class Reservation {
     private ReservationId id;
 
     @ManyToOne
-    @MapsId("utilisateurId")
-    @JoinColumn(name = "utilisateur_id", referencedColumnName = "id")
+    @MapsId("utilisateur")
+    @JoinColumn(name = "utilisateur", referencedColumnName = "id")
     private Utilisateur utilisateur;
 
     @ManyToOne
-    @MapsId("boiteId")
-    @JoinColumn(name = "boite_id", referencedColumnName = "id")
+    @MapsId("boite")
+    @JoinColumn(name = "boite", referencedColumnName = "id")
     private Boite boite;
 
     @Column(nullable = false)
