@@ -1,6 +1,17 @@
 {
-    "java.configuration.updateBuildConfiguration": "interactive",
-    "java.debug.settings.onBuildFailureProceed": true,
+    "java.configuration.updateBuildConfiguration": "automatic", // Automatically updates the build config
+    "java.debug.settings.onBuildFailureProceed": false,         // Prevent debugging if the build fails
+    "java.errors.incompleteClasspath.severity": "error",        // Highlights incomplete classpaths as errors
+    "java.format.settings.url": ".vscode/formatter.xml",        // Optional: Custom code formatter config
+    "java.format.settings.profile": "GoogleStyle",              // Optional: Apply a specific formatting style
+    "java.trace.server": "verbose",                             // Logs detailed activity from the Java Language Server
+    "java.referencesCodeLens.enabled": true,                    // Show code references in the editor
+    "java.configuration.runtimes": [                            // Configure multiple JDK versions
+        {
+            "name": "JavaSE-17",
+            "path": "/path/to/your/jdk-17",
+            "default": true
+        }
+    ]
 }
-
 

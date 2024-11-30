@@ -1,9 +1,13 @@
 package com.capgemini.polytech.services;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.capgemini.polytech.dto.ReservationDto;
@@ -11,7 +15,9 @@ import com.capgemini.polytech.dto.UtilisateurCreateDto;
 import com.capgemini.polytech.dto.UtilisateurDto;
 import com.capgemini.polytech.dto.UtilisateurReservationResponseDto;
 import com.capgemini.polytech.mappers.UtilisateurMapper;
+import com.capgemini.polytech.models.Role;
 import com.capgemini.polytech.models.Utilisateur;
+import com.capgemini.polytech.repositories.RoleRepository;
 import com.capgemini.polytech.repositories.UtilisateurRepository;
 
 @Service
@@ -19,9 +25,13 @@ public class UtilisateurService {
 
     @Autowired
     private UtilisateurRepository utilisateurRepository;
+    @Autowired
+    RoleRepository roleRepository;
 
     @Autowired
     private UtilisateurMapper utilisateurMapper;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public UtilisateurDto getUtilisateurById(Integer id) {
         return utilisateurRepository.findById(id)
@@ -40,6 +50,23 @@ public class UtilisateurService {
         }
         try {
             Utilisateur utilisateur = utilisateurMapper.toEntity(utilisateurcreated);
+            utilisateur.setPassword(passwordEncoder.encode(utilisateur.getPassword()));
+
+            // Fetch roles from the database by their IDs (or names)
+            Set<Role> roles = new HashSet<>();
+            for (String role_name : utilisateurcreated.getRole()) { // Assuming roleIds is a List<Long> in the DTO
+                Role role = roleRepository.findByName(role_name)
+                        .orElseGet(() -> { // If role not found, create it
+                            Role newRole = new Role();
+                            newRole.setName(role_name); // Set the name from the input
+                            return roleRepository.save(newRole); // Save and return the newly created role
+                        });
+                roles.add(role);
+            }
+
+            // Assign the roles to the user
+            utilisateur.setRoles(roles);
+
             Utilisateur savedUtilisateur = utilisateurRepository.save(utilisateur);
             return utilisateurMapper.toDTO(savedUtilisateur);
         } catch (Exception e) {
@@ -64,7 +91,7 @@ public class UtilisateurService {
     public UtilisateurDto updateUtilisateurPassword(Integer id, String password) {
         return utilisateurRepository.findById(id)
                 .map(existingUtilisateur -> {
-                    existingUtilisateur.setPassword(password);
+                    existingUtilisateur.setPassword(passwordEncoder.encode(password));
                     Utilisateur savedUtilisateur = utilisateurRepository.save(existingUtilisateur);
                     return utilisateurMapper.toDTO(savedUtilisateur);
                 })
