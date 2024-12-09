@@ -31,8 +31,8 @@ public class SecurityConfig {
             .sessionManagement(sessionManagement -> sessionManagement
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                .requestMatchers("/api/auth/login").permitAll()
-                .requestMatchers("/api/utilisateurs/create").hasAuthority("admin")
+                .requestMatchers("/api/auth/**","/api/utilisateurs/create").permitAll()
+               // .requestMatchers("/api/utilisateurs/create").hasAuthority("admin")
                 .anyRequest().authenticated())
             .cors(cors -> {}); // Custom CORS configuration, if required
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);

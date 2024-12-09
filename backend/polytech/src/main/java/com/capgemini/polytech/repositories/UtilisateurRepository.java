@@ -9,4 +9,5 @@ import com.capgemini.polytech.models.Utilisateur;
 @Repository
 public interface UtilisateurRepository extends JpaRepository <Utilisateur,Integer>{
     Optional<Utilisateur> findByNom(String nom);
+    Optional<Utilisateur> findByUsername(String username);
 }
