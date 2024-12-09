@@ -40,6 +40,8 @@ public class BoiteController {
 
     @PostMapping("create")
     public ResponseEntity<BoiteDto> createBoite(@RequestBody BoiteDto boiteDTO) {
+        System.out.println("tahhhhherr");
+        System.out.println(boiteDTO);
         BoiteDto createdBoite = boiteService.createBoite(boiteDTO);
         return ResponseEntity.ok(createdBoite);
     }

@@ -1,20 +1,35 @@
-<div class="boite-add-container">
-    <h2>Ajouter une nouvelle boîte</h2>
-    
-    <form (ngSubmit)="addBoite()">
-      <label for="name">Nom:</label>
-      <input type="text" id="name" [(ngModel)]="newBoite.name" name="name" required>
+<div class="container mt-5">
+    <h2 class="mb-4 text-center">Ajouter une nouvelle boîte</h2>
+    <form (ngSubmit)="addBoite()" class="row g-3">
   
-      <label for="description">Description:</label>
-      <input type="text" id="description" [(ngModel)]="newBoite.description" name="description" required>
+      <!-- Nom de la boîte -->
+      <div class="col-md-6">
+        <label for="name" class="form-label">Nom de la boîte:</label>
+        <input type="text" id="name" class="form-control" [(ngModel)]="boite.nom" name="name" required>
+      </div>
   
-      <label for="quantite">Quantité:</label>
-      <input type="number" id="quantite" [(ngModel)]="newBoite.quantite" name="quantite" required>
+      <!-- Description -->
+      <div class="col-md-6">
+        <label for="description" class="form-label">Description:</label>
+        <textarea id="description" class="form-control" [(ngModel)]="boite.description" name="description" required></textarea>
+      </div>
   
-      <label for="pointGeo">Point Géographique:</label>
-      <input type="text" id="pointGeo" [(ngModel)]="newBoite.pointGeo" name="pointGeo" required>
+      <!-- Quantité -->
+      <div class="col-md-6">
+        <label for="quantite" class="form-label">Quantité:</label>
+        <input type="number" id="quantite" class="form-control" [(ngModel)]="boite.quantite" name="quantite" required>
+      </div>
   
-      <button type="submit" mat-raised-button color="primary">Ajouter</button>
+      <!-- Point géographique -->
+      <div class="col-md-6">
+        <label for="pointGeo" class="form-label">Point géographique:</label>
+        <input type="text" id="pointGeo" class="form-control" [(ngModel)]="boite.pointGeo" name="pointGeo" required>
+      </div>
+  
+      <!-- Submit Button -->
+      <div class="col-12 text-center">
+        <button type="submit" class="btn btn-primary">Ajouter la boîte</button>
+      </div>
     </form>
   </div>
   
