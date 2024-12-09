@@ -24,23 +24,25 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())
-            .exceptionHandling(exceptionHandling -> exceptionHandling
-                .authenticationEntryPoint(authEntryPoint)
-                .accessDeniedHandler(accessDeniedHandler()))
-            .sessionManagement(sessionManagement -> sessionManagement
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                .requestMatchers("/api/auth/login","/api/boites/all","/api/boites/create").permitAll()
-                .requestMatchers("/api/utilisateurs/create").hasAuthority("admin")
-                .anyRequest().authenticated())
-            .cors(cors -> {}); // Custom CORS configuration, if required
+                .csrf(csrf -> csrf.disable())
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .authenticationEntryPoint(authEntryPoint)
+                        .accessDeniedHandler(accessDeniedHandler()))
+                .sessionManagement(sessionManagement -> sessionManagement
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(authorizeRequests -> authorizeRequests
+                        .requestMatchers("/api/auth/**","/api/utilisateurs/create").permitAll()
+                        // .requestMatchers("/api/utilisateurs/create").hasAuthority("admin")
+                        .anyRequest().authenticated())
+                .cors(cors -> {
+                }); // Custom CORS configuration, if required
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
@@ -53,8 +55,6 @@ public class SecurityConfig {
     public JWTAuthenticationFilter jwtAuthenticationFilter() {
         return new JWTAuthenticationFilter();
     }
-
-
 
     @Bean
     public AccessDeniedHandler accessDeniedHandler() {

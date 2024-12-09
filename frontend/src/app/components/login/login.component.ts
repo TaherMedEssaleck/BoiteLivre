@@ -5,6 +5,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router'; // Import Router
+import { User } from '../../models/auth/user'; // Adjust path as needed
 
 @Component({
   selector: 'app-login',
@@ -19,13 +22,48 @@ export class LoginComponent {
     password: ['', Validators.required],
   });
 
-  constructor(private fb: FormBuilder) {}
+  errorMessage: string | null = null; // To store and display error messages
+
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router // Inject Router
+  ) {}
 
   onSubmit(): void {
-    if (this.loginForm.valid) {
-      console.log('Login successful', this.loginForm.value);
-    } else {
-      console.log('Form is not valid');
-    }
+    // Get the form values and cast them to a User type
+    const user: User = new User(
+      this.loginForm.value.username!, // non-null assertion operator to ensure values are not undefined
+      this.loginForm.value.password!  // non-null assertion operator to ensure values are not undefined
+    );
+
+    // Call the login method when the form is submitted
+    this.authService.login(user).subscribe(
+      (response) => {
+        const accessToken = response.accessToken;
+        if (accessToken) {
+          // Store token and redirect
+          localStorage.setItem('accessToken', accessToken);
+          console.log('Access token stored in localStorage.');
+
+          // Redirect to the desired route, e.g., '/listBoites'
+          this.router.navigate(['/listBoites']);
+        } else {
+          // If no token is provided in the response
+          console.error('No access token received in response.');
+          this.errorMessage = 'An error occurred while logging in. Please try again.';
+        }
+      },
+      (error) => {
+        console.error('Login failed', error);
+
+        // Show an error message on the UI
+        if (error.status === 401) {
+          this.errorMessage = 'Invalid username or password.';
+        } else {
+          this.errorMessage = 'An unexpected error occurred. Please try again later.';
+        }
+      }
+    );
   }
 }
