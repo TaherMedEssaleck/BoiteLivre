@@ -1,0 +1,20 @@
+<div class="boite-add-container">
+    <h2>Ajouter une nouvelle boîte</h2>
+    
+    <form (ngSubmit)="addBoite()">
+      <label for="name">Nom:</label>
+      <input type="text" id="name" [(ngModel)]="newBoite.name" name="name" required>
+  
+      <label for="description">Description:</label>
+      <input type="text" id="description" [(ngModel)]="newBoite.description" name="description" required>
+  
+      <label for="quantite">Quantité:</label>
+      <input type="number" id="quantite" [(ngModel)]="newBoite.quantite" name="quantite" required>
+  
+      <label for="pointGeo">Point Géographique:</label>
+      <input type="text" id="pointGeo" [(ngModel)]="newBoite.pointGeo" name="pointGeo" required>
+  
+      <button type="submit" mat-raised-button color="primary">Ajouter</button>
+    </form>
+  </div>
+  
