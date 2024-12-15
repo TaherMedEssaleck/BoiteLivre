@@ -4,6 +4,9 @@ import { BoiteListComponent } from './components/boite-list/boite-list.component
 import { AddBoiteComponent } from './components/boite-add/boite-add.component';
 import { BoiteEditComponent } from './components/boite-edit/boite-edit.component';
 import { AuthGuard } from './guards/auth.guard';
+import { MapComponent } from './components/map/map.component';
+import { BoiteDetailComponent } from './components/boite-detail/boite-detail.component';
+
 
 export const routes: Routes = [
     { path: 'login', component: LoginComponent },
@@ -11,5 +14,7 @@ export const routes: Routes = [
     { path: 'listBoites', component: BoiteListComponent, canActivate: [AuthGuard] },
     { path: 'editBoite/:id', component: BoiteEditComponent, canActivate: [AuthGuard] },
     { path: '', redirectTo: '/login', pathMatch: 'full' }, 
-    { path: '**', redirectTo: '/login' },
+    //{ path: '**', redirectTo: '/login' },
+    { path: 'map', component: MapComponent, canActivate: [AuthGuard] },
+    { path: 'boite-detail/:id', component: BoiteDetailComponent, canActivate: [AuthGuard]  },
 ];

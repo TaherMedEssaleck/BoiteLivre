@@ -104,6 +104,11 @@ button[color="warn"]:hover {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  margin-right: 10px;
+}
+
+.add-button-container button:last-child {
+  margin-right: 0; /* Supprime la marge à droite du dernier bouton */
 }
 
 .add-button-container button:hover {

@@ -49,4 +49,12 @@ export class BoiteListComponent implements OnInit {
   onAdd(): void {
     this.router.navigate(['/add']); // Navigate to the add form
   }
+  carte(): void {
+    this.router.navigate(['/map']); // Navigate to the add form
+  }
+
+  onRowClick(id: number): void {
+    this.router.navigate([`/boite-detail/${id}`]); // Navigate to the detail page
+  }
+
 }
