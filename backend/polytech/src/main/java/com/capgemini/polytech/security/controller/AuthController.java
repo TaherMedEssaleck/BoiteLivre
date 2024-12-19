@@ -50,7 +50,8 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         Map<String, String> token = jwtGenerator.generateToken(authentication);
         String access = token.get("access-token");
-        return new ResponseEntity<>(new AuthResponse(access), HttpStatus.OK);
+        String userId = token.get("user-id");
+        return new ResponseEntity<>(new AuthResponse(access,userId), HttpStatus.OK);
     }
 
     @PostMapping("/access-denied")

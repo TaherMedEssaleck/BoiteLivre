@@ -3,7 +3,7 @@ import { HttpInterceptorFn } from '@angular/common/http';
 export const authInterceptor: HttpInterceptorFn = (request, next) => {
   // Retrieve the token from localStorage
   const token = localStorage.getItem('accessToken');
-
+  const id = localStorage.getItem('userId');
   // If a token is found, clone the request and add the Authorization header
   if (token) {
     const clonedRequest = request.clone({
@@ -13,6 +13,7 @@ export const authInterceptor: HttpInterceptorFn = (request, next) => {
     });
 
     console.log('Authorization header:', `Bearer ${JSON.stringify({ accessToken: token })}`);
+    console.log(id);
     // Pass the cloned request instead of the original one to the next handler
     return next(clonedRequest);
   }

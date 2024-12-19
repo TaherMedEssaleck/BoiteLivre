@@ -4,7 +4,7 @@ import com.capgemini.polytech.models.Boite;
 import com.capgemini.polytech.models.Reservation;
 import com.capgemini.polytech.models.ReservationId;
 import com.capgemini.polytech.models.Utilisateur;
-
+import com.capgemini.polytech.dto.BoiteDto;
 import com.capgemini.polytech.dto.ReservationDto;
 import com.capgemini.polytech.dto.ReservationIdsDto;
 
@@ -39,6 +39,9 @@ public class ReservationService {
 
     @Autowired
     private UtilisateurMapper utilisateurMapper;
+
+    @Autowired
+    private BoiteService boiteService;
 
     @Autowired
     private BoiteMapper boiteMapper;
@@ -90,6 +93,8 @@ public class ReservationService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Utilisateur not found"));
         Boite boite = boiteRepository.findById(reservationId.getBoite())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Boite not found"));
+   
+
 
         Reservation reservation = reservationMapper.toEntity(reservationDTO);
         reservation.setId(reservationId);
@@ -100,6 +105,40 @@ public class ReservationService {
 
         return reservationMapper.toDTO(reservation);
     }
+
+    public ReservationDto reserveBoite(ReservationIdsDto reservationIdsDto) {
+        ReservationDto reservationDto = convertReservationIdsDTOtoReservationDTO(reservationIdsDto);
+
+        // Vérifier la quantité
+        BoiteDto boite = reservationDto.getBoite();
+        if (boite.getQuantite() < reservationDto.getReservation()) {
+            throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED,"Quantité insuffisante dans la boîte.");
+        }
+
+        // Mettre à jour la quantité
+        boite.setQuantite(boite.getQuantite() - reservationDto.getReservation());
+        boiteService.updateBoite(boite);
+
+        // Créer la réservation
+        ReservationDto createdReservation = createReservation(reservationDto);
+
+        return createdReservation;
+    }
+
+    public void rendreLivres(ReservationIdsDto reservationDto){
+        BoiteDto boite = convertReservationIdsDTOtoReservationDTO(reservationDto).getBoite();
+        boite.setQuantite(boite.getQuantite() + reservationDto.getReservation());
+        boiteService.updateBoite(boite);
+        System.out.println("fuck");
+        ReservationId id = new ReservationId();
+        id.setBoite(boite.getId());
+        id.setUtilisateur(reservationDto.getUtilisateur());
+        if (!reservationRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Reservation not found");
+        }
+        reservationRepository.deleteById(id);
+    }
+
 
     public ReservationDto updateReservation(ReservationDto reservationDTO) {
         ReservationId id = new ReservationId();

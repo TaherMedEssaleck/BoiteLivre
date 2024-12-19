@@ -8,6 +8,7 @@ import { Boite } from '../models/boite/boite.module';
 })
 export class BoiteService {
   private apiUrl = 'http://localhost:8080/api/boites/';
+  private apiUrl1 = 'http://localhost:8080/api/reservations/';
 
   constructor(private http: HttpClient) {}
 
@@ -35,4 +36,16 @@ export class BoiteService {
   deleteBoite(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}delete/${id}`);
   }
+
+  
+  
+  reserveBoite(reservation: { utilisateur: number; boite: number; reservation: number }): Observable<any> {
+    const payload = {
+      utilisateur: reservation.utilisateur,
+      boite: reservation.boite,
+      reservation: reservation.reservation, // Ensure keys match backend expectations
+    };
+    return this.http.post<any>(`${this.apiUrl1}reserve`, payload);
+  }
+  
 }

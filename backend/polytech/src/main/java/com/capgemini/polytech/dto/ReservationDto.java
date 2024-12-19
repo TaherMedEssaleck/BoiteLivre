@@ -3,7 +3,6 @@ package com.capgemini.polytech.dto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import com.capgemini.polytech.models.ReservationId;
-import com.capgemini.polytech.dto.*;
 import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 

@@ -5,6 +5,9 @@ import { MatTableModule } from '@angular/material/table';
 import { FormsModule } from '@angular/forms';
 import { Boite } from '../../models/boite/boite.module';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { ReservationDialogComponent } from '../reservation-dialog/reservation-dialog.component';
+
 
 @Component({
   selector: 'app-boite-list',
@@ -21,7 +24,7 @@ export class BoiteListComponent implements OnInit {
   searchText: string = '';
   sortDirection: 'asc' | 'desc' = 'asc'; 
 
-  constructor(private boiteService: BoiteService, private router: Router) {}
+  constructor(private boiteService: BoiteService, private router: Router, private dialog: MatDialog ) {}
 
   ngOnInit(): void {
     this.boiteService.getBoites().subscribe(
@@ -56,6 +59,45 @@ export class BoiteListComponent implements OnInit {
     }
   }
 
+  declareReservation(boite: Boite): void {
+    const dialogRef = this.dialog.open(ReservationDialogComponent, {
+      width: '400px',
+      data: { maxQuantity: boite.quantite },
+    });
+  
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result !== undefined && result > 0 && result <= (boite.quantite as unknown as number)) {
+        const userId = localStorage.getItem('userId');
+        const connectedUserId = userId ? parseInt(userId, 10) : null;
+  
+        if (!connectedUserId) {
+          alert('Vous devez être connecté pour effectuer une réservation.');
+          return;
+        }
+  
+        const payload = {
+          utilisateur: connectedUserId,
+          boite: boite.id as unknown as number,
+          reservation: result,
+        };
+  
+        console.log('Payload:', JSON.stringify(payload)); // Log the payload for debugging
+  
+        this.boiteService.reserveBoite(payload).subscribe(
+          () => {
+            alert('Réservation réussie !');
+            boite.quantite = (boite.quantite as unknown as number) - result;
+          },
+          (error) => {
+            alert('Erreur lors de la réservation:',);
+          }
+        );
+      } else if (result !== undefined) {
+        alert('Quantité invalide.');
+      }
+    });
+  }
+  
   // Méthode pour ajouter une boîte
   onAdd(): void {
     this.router.navigate(['/add']);
