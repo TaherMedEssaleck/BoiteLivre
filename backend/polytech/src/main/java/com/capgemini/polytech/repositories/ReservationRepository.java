@@ -11,4 +11,5 @@ import com.capgemini.polytech.models.ReservationId;
 public interface ReservationRepository extends JpaRepository <Reservation,ReservationId>{
 
     List<Reservation> findAllByUtilisateurId(Integer utilisateurId);
+    List<Reservation> findAllByBoiteId(Integer boiteId);
 }

@@ -59,6 +59,16 @@ public class ReservationService {
                 .map(reservationMapper::toDTO)
                 .collect(Collectors.toList());
     }
+
+    public List<ReservationDto> getAllReservationsByBoite(Integer boiteId) {
+        if (!boiteRepository.existsById(boiteId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Boite not found");
+        }
+        return reservationRepository.findAllByBoiteId(boiteId)
+                .stream()
+                .map(reservationMapper::toDTO)
+                .collect(Collectors.toList());
+    }
     
     public ReservationDto getReservationById(ReservationId reservationId) {
         return reservationRepository.findById(reservationId)

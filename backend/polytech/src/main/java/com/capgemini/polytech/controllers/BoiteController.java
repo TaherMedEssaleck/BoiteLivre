@@ -13,7 +13,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.capgemini.polytech.dto.BoiteDto;
+import com.capgemini.polytech.dto.BoiteReservationResponseDto;
+import com.capgemini.polytech.dto.ReservationDto;
+import com.capgemini.polytech.dto.UtilisateurDto;
+import com.capgemini.polytech.dto.UtilisateurReservationResponseDto;
 import com.capgemini.polytech.services.BoiteService;
+import com.capgemini.polytech.services.ReservationService;
 
 import lombok.AllArgsConstructor;
 
@@ -25,6 +30,9 @@ public class BoiteController {
 
     @Autowired
     private BoiteService boiteService;
+
+    @Autowired
+    private ReservationService reservationService;
 
     @GetMapping("{id}")
     public ResponseEntity<BoiteDto> getBoiteById(@PathVariable Integer id) {
@@ -56,5 +64,13 @@ public class BoiteController {
     public ResponseEntity<Void> deleteBoite(@PathVariable Integer id) {
         boiteService.deleteBoite(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("allreservations/{id}")
+    public ResponseEntity<BoiteReservationResponseDto> getAllUtilisateurReservations(@PathVariable Integer id) {
+        BoiteDto boite = boiteService.getBoiteById(id);
+        List<ReservationDto> reservations = reservationService.getAllReservationsByBoite(id);
+        BoiteReservationResponseDto response = boiteService.createBoiteReservationResponse(boite, reservations);
+        return ResponseEntity.ok(response);
     }
 }

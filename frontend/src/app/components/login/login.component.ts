@@ -41,13 +41,15 @@ export class LoginComponent {
     this.authService.login(user).subscribe(
       (response) => {
         const accessToken = response.accessToken;
+        const userId = response.userId;
         if (accessToken) {
           // Store token and redirect
           localStorage.setItem('accessToken', accessToken);
+          localStorage.setItem('userId',userId);
           console.log('Access token stored in localStorage.');
 
           // Redirect to the desired route, e.g., '/listBoites'
-          this.router.navigate(['/listBoites']);
+          this.router.navigate(['/userHome']);
         } else {
           // If no token is provided in the response
           console.error('No access token received in response.');

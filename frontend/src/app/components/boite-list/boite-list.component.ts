@@ -7,18 +7,25 @@ import { Boite } from '../../models/boite/boite.module';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ReservationDialogComponent } from '../reservation-dialog/reservation-dialog.component';
+import { Reservation } from '../../models/user-response/user-response.module';
+import { ReservationBoiteDialogComponent } from '../reservation-boite-dialog/reservation-boite-dialog.component';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 @Component({
   selector: 'app-boite-list',
   standalone: true,
-  imports: [CommonModule, MatTableModule, FormsModule],
+  imports: [CommonModule, MatTableModule, FormsModule, MatIconModule,MatTooltipModule,],
   templateUrl: './boite-list.component.html',
   styleUrls: ['./boite-list.component.css'],
 })
 export class BoiteListComponent implements OnInit {
   boites: Boite[] = []; 
   displayedColumns: string[] = ['id', 'quantite', 'name', 'description', 'pointGeo', 'actions']; // Colonnes affichées
+  isReservationsVisible: boolean = false; // To toggle reservations visibility
+  reservations: Reservation[] = []; // To store reservations for the selected Boîte
+
 
   filteredBoites: Boite[] = []; 
   searchText: string = '';
@@ -43,6 +50,20 @@ export class BoiteListComponent implements OnInit {
     this.router.navigate([`/editBoite/${boite.id}`]);
   }
 
+  openReservationsDialog(boiteId: number): void {
+    this.boiteService.getBoiteReservations(boiteId).subscribe(
+      (data) => {
+        this.dialog.open(ReservationBoiteDialogComponent, {
+          width: '600px',
+          data: { reservations: data.reservations },
+        });
+      },
+      (error) => {
+        console.error('Erreur lors de la récupération des réservations', error);
+      }
+    );
+  }
+  
   
   onDelete(id: number): void {
     if (confirm('Êtes-vous sûr de vouloir supprimer cette boîte?')) {
@@ -58,6 +79,32 @@ export class BoiteListComponent implements OnInit {
       );
     }
   }
+
+  // Fetch reservations for a specific Boîte
+fetchReservations(boiteId: number): void {
+  this.boiteService.getBoiteReservations(boiteId).subscribe(
+    (data) => {
+      console.log('Backend Response:', data);
+      this.reservations = data.reservations;
+    },
+    (error) => {
+      console.error('Erreur lors de la récupération des réservations', error);
+    }
+  );
+}
+
+  // Toggle the visibility of reservations for a specific Boîte
+toggleBoiteReservations(boiteId: number): void {
+  if (this.isReservationsVisible) {
+    // Hide reservations if already visible
+    this.isReservationsVisible = false;
+    this.reservations = [];
+  } else {
+    // Fetch and display reservations
+    this.fetchReservations(boiteId);
+    this.isReservationsVisible = true;
+  }
+}
 
   declareReservation(boite: Boite): void {
     const dialogRef = this.dialog.open(ReservationDialogComponent, {

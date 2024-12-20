@@ -60,8 +60,11 @@ public class UtilisateurController {
     }
 
     // Endpoint to update utilisateur details
-    @PutMapping("update")
-    public ResponseEntity<UtilisateurDto> updateUtilisateur(@RequestBody UtilisateurDto utilisateurDTO) {
+    @PutMapping("update/{id}")
+    public ResponseEntity<UtilisateurDto> updateUtilisateur(
+            @PathVariable Integer id,
+            @RequestBody UtilisateurDto utilisateurDTO) {
+        utilisateurDTO.setId(id); // Assurez-vous que l'ID est défini dans le DTO
         UtilisateurDto updatedUtilisateur = utilisateurService.updateUtilisateur(utilisateurDTO);
         return ResponseEntity.ok(updatedUtilisateur);
     }

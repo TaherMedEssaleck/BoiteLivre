@@ -7,6 +7,7 @@ import { AuthGuard } from './guards/auth.guard';
 import { MapComponent } from './components/map/map.component';
 import { BoiteDetailComponent } from './components/boite-detail/boite-detail.component';
 import { UserHomeComponent } from './components/user-home/user-home.component';
+import { UserListComponent } from './components/user-list/user-list.component';
 
 
 export const routes: Routes = [
@@ -19,4 +20,5 @@ export const routes: Routes = [
     //{ path: '**', redirectTo: '/login' },
     { path: 'map', component: MapComponent, canActivate: [AuthGuard] },
     { path: 'boite-detail/:id', component: BoiteDetailComponent, canActivate: [AuthGuard]  },
+    { path: 'listusers', component: UserListComponent, canActivate: [AuthGuard] },
 ];

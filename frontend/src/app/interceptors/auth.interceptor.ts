@@ -13,7 +13,8 @@ export const authInterceptor: HttpInterceptorFn = (request, next) => {
     });
 
     console.log('Authorization header:', `Bearer ${JSON.stringify({ accessToken: token })}`);
-    console.log(id);
+    console.log('userId',`${JSON.stringify({ userId: id })}`);
+
     // Pass the cloned request instead of the original one to the next handler
     return next(clonedRequest);
   }

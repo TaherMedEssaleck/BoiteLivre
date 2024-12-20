@@ -76,6 +76,20 @@ public class UtilisateurService {
 
     public UtilisateurDto updateUtilisateur(UtilisateurDto utilisateurDTO) {
         Utilisateur utilisateur = utilisateurMapper.toEntity(utilisateurDTO);
+        // Vérification si les rôles sont nuls ou vides
+    Set<Role> roles = new HashSet<>();
+    if (utilisateurDTO.getRoles() != null) {
+        for (Role role_name : utilisateurDTO.getRoles()) {
+            Role role = roleRepository.findByName(role_name.getName())
+                    .orElseGet(() -> {
+                        Role newRole = new Role();
+                        newRole.setName(role_name.getName());
+                        return roleRepository.save(newRole);
+                    });
+            roles.add(role);
+        }
+    }
+
         return utilisateurRepository.findById(utilisateur.getId())
                 .map(existingUtilisateur -> {
                     existingUtilisateur.setNom(utilisateur.getNom());

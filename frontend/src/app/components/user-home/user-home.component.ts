@@ -38,6 +38,8 @@ export class UserHomeComponent implements OnInit {
     this.fetchReservations();
   }
 
+ 
+
   fetchReservations(): void {
     const userId = localStorage.getItem('userId');
     if (!userId) {
@@ -88,6 +90,11 @@ export class UserHomeComponent implements OnInit {
   navigateToListBoites() {
     // Assuming you use Angular Router
     this.router.navigate(['/listBoites']);
+  }
+
+  navigateToListUsers() {
+    // Assuming you use Angular Router
+    this.router.navigate(['/listusers']);
   }
 
   

@@ -31,7 +31,7 @@ public class SecurityConfig {
                 .sessionManagement(sessionManagement -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/api/auth/**","/api/utilisateurs/create","/api/reservations/delete","/api/reservations/return").permitAll()
+                        .requestMatchers("/api/auth/**","/api/utilisateurs/update/**","/api/utilisateurs/create","/api/reservations/delete","/api/reservations/return","/api/utilisateurs/all").permitAll()
                         // .requestMatchers("/api/utilisateurs/create").hasAuthority("admin")
                         .anyRequest().authenticated())
                 .cors(cors -> {

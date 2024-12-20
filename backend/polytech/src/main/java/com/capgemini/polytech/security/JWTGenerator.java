@@ -72,6 +72,9 @@ public class JWTGenerator {
                 idToken.put("access-token", token);
                 idToken.put("refresh-token", refreshToken);
                 idToken.put("user-id",userIdString);
+                String usId = idToken.get("user-id");
+                System.out.println("usId");
+                System.out.println(usId);
                 return idToken;
     }
 

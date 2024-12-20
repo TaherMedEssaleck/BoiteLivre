@@ -7,6 +7,8 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
 
 import com.capgemini.polytech.dto.BoiteDto;
+import com.capgemini.polytech.dto.BoiteReservationResponseDto;
+import com.capgemini.polytech.dto.ReservationDto;
 import com.capgemini.polytech.mappers.BoiteMapper;
 import com.capgemini.polytech.models.Boite;
 import com.capgemini.polytech.repositories.BoiteRepository;
@@ -57,5 +59,11 @@ public class BoiteService {
         }
         boiteRepository.deleteById(id);
 
+    }
+
+
+    public BoiteReservationResponseDto createBoiteReservationResponse(BoiteDto boite,
+            List<ReservationDto> reservationDTOs) {
+        return new BoiteReservationResponseDto(boite, reservationDTOs);
     }
 }

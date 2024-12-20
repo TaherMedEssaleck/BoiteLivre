@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Boite } from '../models/boite/boite.module';
+import { BoiteResponse } from '../models/boite-response/boite-response.module';
 
 @Injectable({
   providedIn: 'root',
@@ -35,6 +36,10 @@ export class BoiteService {
   // Supprimer une boîte par ID
   deleteBoite(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}delete/${id}`);
+  }
+
+  getBoiteReservations(boiteId: number): Observable<BoiteResponse> {
+    return this.http.get<BoiteResponse>(`${this.apiUrl}allreservations/${boiteId}`);
   }
 
   
