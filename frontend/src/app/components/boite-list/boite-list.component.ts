@@ -31,13 +31,19 @@ export class BoiteListComponent implements OnInit {
   searchText: string = '';
   sortDirection: 'asc' | 'desc' = 'asc'; 
 
+  pageIndex: number = 0; // Current page index
+  pageSize: number = 10; // Number of items per page
+  totalPages: number = 0; // Total number of pages
+
+
   constructor(private boiteService: BoiteService, private router: Router, private dialog: MatDialog ) {}
 
   ngOnInit(): void {
     this.boiteService.getBoites().subscribe(
       (data) => {
-        this.boites = data; 
-        this.filteredBoites = [...this.boites];
+        this.boites = data;
+        this.filteredBoites = this.boites.slice(0, this.pageSize);
+        this.totalPages = Math.ceil(this.boites.length / this.pageSize);
       },
       (error) => {
         console.error('Erreur lors de la récupération des données', error);
@@ -191,6 +197,19 @@ toggleBoiteReservations(boiteId: number): void {
         val.toString().toLowerCase().includes(this.searchText.toLowerCase())
       )
     );
-    this.sort('id'); // Tri par défaut après filtrage
+    this.totalPages = Math.ceil(this.filteredBoites.length / this.pageSize);
+    this.changePage(0); // Reset to the first page
   }
+
+  changePage(newPageIndex: number): void {
+    if (newPageIndex < 0 || newPageIndex >= this.totalPages) return;
+
+    this.pageIndex = newPageIndex;
+    const startIndex = this.pageIndex * this.pageSize;
+    this.filteredBoites = this.boites.slice(startIndex, startIndex + this.pageSize);
+  }
+
+  
+
+  
 }
