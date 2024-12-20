@@ -42,6 +42,14 @@ export class BoiteService {
     return this.http.get<BoiteResponse>(`${this.apiUrl}allreservations/${boiteId}`);
   }
 
+  private apiUrl2 = 'http://localhost:8080/api/utilisateurs';
+
+ 
+
+  getAllUsers(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl2}/all`);
+  }
+
   
   
   reserveBoite(reservation: { utilisateur: number; boite: number; reservation: number }): Observable<any> {

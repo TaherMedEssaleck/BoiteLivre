@@ -3,7 +3,7 @@
 
   <div class="add-button-container">
     <button mat-raised-button color="primary" (click)="carte()">Voir sur la carte</button>
-    <button mat-raised-button color="primary" (click)="onAdd()">Ajouter une Boîte</button>
+    <button *ngIf="isAdmin()" mat-raised-button color="primary" (click)="onAdd()">Ajouter une Boîte</button>
   </div>
 
   <div class="search-container">
@@ -56,6 +56,9 @@
       <td mat-cell *matCellDef="let boite">
         <div class="action-buttons">
           <button mat-icon-button color="primary" matTooltip="Modifier" aria-label="Update" (click)="onUpdate(boite)">
+          <!-- Bouton de mise à jour avec une icône -->
+          <button *ngIf="isAdmin()" mat-icon-button color="primary" matTooltip="Modifier"
+          aria-label="Update" (click)="onUpdate(boite)">
             <mat-icon>edit</mat-icon>
           </button>
           <button mat-icon-button color="warn" matTooltip="Supprimer" aria-label="Delete" (click)="onDelete(boite.id)">

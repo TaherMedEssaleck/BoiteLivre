@@ -25,6 +25,8 @@ export class BoiteListComponent implements OnInit {
   displayedColumns: string[] = ['id', 'quantite', 'name', 'description', 'pointGeo', 'actions']; // Colonnes affichées
   isReservationsVisible: boolean = false; // To toggle reservations visibility
   reservations: Reservation[] = []; // To store reservations for the selected Boîte
+  users: any[] = []; // Stocke tous les utilisateurs
+  currentUser: any = null; // Stocke les détails de l'utilisateur connecté
 
 
   filteredBoites: Boite[] = []; 
@@ -49,8 +51,20 @@ export class BoiteListComponent implements OnInit {
         console.error('Erreur lors de la récupération des données', error);
       }
     );
+
+     // Récupérer tous les utilisateurs
+     this.boiteService.getAllUsers().subscribe(
+      (data) => {
+        this.users = data;
+        this.setCurrentUser(); // Identifier l'utilisateur connecté
+      },
+      (error) => {
+        console.error('Erreur lors de la récupération des utilisateurs', error);
+      }
+    );
   }
 
+  
  
   onUpdate(boite: Boite): void {
     this.router.navigate([`/editBoite/${boite.id}`]);
@@ -68,6 +82,24 @@ export class BoiteListComponent implements OnInit {
         console.error('Erreur lors de la récupération des réservations', error);
       }
     );
+  }
+
+   // Détecter l'utilisateur connecté
+   setCurrentUser(): void {
+    const userId = localStorage.getItem('userId'); // ID de l'utilisateur stocké dans localStorage
+    if (userId) {
+      this.currentUser = this.users.find((user) => user.id === parseInt(userId, 10));
+    }
+    if (this.currentUser) {
+      console.log('Utilisateur connecté:', this.currentUser);
+    } else {
+      console.warn('Utilisateur connecté introuvable.');
+    }
+  }
+
+  // Vérifier si l'utilisateur est ADMIN
+  isAdmin(): boolean {
+    return this.currentUser?.roles.some((role: any) => role.name === 'ADMIN');
   }
   
   
