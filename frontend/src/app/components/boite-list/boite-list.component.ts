@@ -44,8 +44,7 @@ export class BoiteListComponent implements OnInit {
     this.boiteService.getBoites().subscribe(
       (data) => {
         this.boites = data;
-        this.filteredBoites = this.boites.slice(0, this.pageSize);
-        this.totalPages = Math.ceil(this.boites.length / this.pageSize);
+        this.applyFilters(); // Applique les filtres pour initialiser
       },
       (error) => {
         console.error('Erreur lors de la récupération des données', error);
@@ -192,6 +191,11 @@ toggleBoiteReservations(boiteId: number): void {
   carte(): void {
     this.router.navigate(['/map']);
   }
+  rest(): void {
+    this.router.navigate(['/userHome']);
+  }
+  
+  
 
   // Méthode pour naviguer vers les détails d'une boîte
   onRowClick(id: number): void {
@@ -224,24 +228,36 @@ toggleBoiteReservations(boiteId: number): void {
   
 
   applyFilters(): void {
+    // Filtrer les boîtes selon le texte de recherche
+    const lowerCaseSearch = this.searchText.toLowerCase();
     this.filteredBoites = this.boites.filter((boite) =>
-      Object.values(boite).some((val) =>
-        val.toString().toLowerCase().includes(this.searchText.toLowerCase())
-      )
+      boite.nom.toLowerCase().includes(lowerCaseSearch) ||
+      boite.description.toLowerCase().includes(lowerCaseSearch) ||
+      boite.pointGeo.toLowerCase().includes(lowerCaseSearch) ||
+      boite.id?.toString().includes(this.searchText) || false
     );
+  
+    // Recalculer les pages
     this.totalPages = Math.ceil(this.filteredBoites.length / this.pageSize);
-    this.changePage(0); // Reset to the first page
+    this.changePage(0); // Réinitialiser à la première page
   }
+  
 
   changePage(newPageIndex: number): void {
     if (newPageIndex < 0 || newPageIndex >= this.totalPages) return;
-
+  
     this.pageIndex = newPageIndex;
     const startIndex = this.pageIndex * this.pageSize;
-    this.filteredBoites = this.boites.slice(startIndex, startIndex + this.pageSize);
-  }
-
+    const endIndex = startIndex + this.pageSize;
   
-
+    // Paginer uniquement les résultats filtrés
+    this.filteredBoites = this.boites.filter((boite) =>
+      boite.nom.toLowerCase().includes(this.searchText.toLowerCase()) ||
+      boite.description.toLowerCase().includes(this.searchText.toLowerCase()) ||
+      boite.pointGeo.toLowerCase().includes(this.searchText.toLowerCase()) ||
+      boite.id?.toString().includes(this.searchText)
+    ).slice(startIndex, endIndex);
+  }
+  
   
 }

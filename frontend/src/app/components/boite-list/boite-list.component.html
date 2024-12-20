@@ -1,7 +1,8 @@
 <div class="boite-list-container">
   <h2>Liste des Boîtes</h2>
-
+  
   <div class="add-button-container">
+    <button mat-raised-button color="primary" (click)="rest()">Home Page </button>
     <button mat-raised-button color="primary" (click)="carte()">Voir sur la carte</button>
     <button *ngIf="isAdmin()" mat-raised-button color="primary" (click)="onAdd()">Ajouter une Boîte</button>
   </div>
