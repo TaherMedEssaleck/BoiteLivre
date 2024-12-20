@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { Location } from '@angular/common'; 
 import { trigger, style, animate, transition } from '@angular/animations';
 import { Router } from '@angular/router';
+import { BoiteService } from '../../services/boite.service';
 
 @Component({
   selector: 'app-user-home',
@@ -26,17 +27,50 @@ export class UserHomeComponent implements OnInit {
   reservations: Reservation[] = [];
   displayedColumns: string[] = ['boiteName', 'reservationCount', 'actions']; // Define displayed columns
   isTableVisible: boolean = false;
+  users: any[] = []; // Stocke tous les utilisateurs
+  currentUser: any = null; // Stocke les détails de l'utilisateur connecté
+
 
   constructor(
     private reservationService: ReservationService,
     private snackBar: MatSnackBar,
     private location: Location,
-    private router: Router
+    private router: Router,
+    private boiteService: BoiteService
   ) {}
 
   ngOnInit(): void {
     this.fetchReservations();
+
+     // Récupérer tous les utilisateurs
+     this.boiteService.getAllUsers().subscribe(
+      (data) => {
+        this.users = data;
+        this.setCurrentUser(); // Identifier l'utilisateur connecté
+      },
+      (error) => {
+        console.error('Erreur lors de la récupération des utilisateurs', error);
+      }
+    );
   }
+
+  setCurrentUser(): void {
+    const userId = localStorage.getItem('userId'); // ID de l'utilisateur stocké dans localStorage
+    if (userId) {
+      this.currentUser = this.users.find((user) => user.id === parseInt(userId, 10));
+    }
+    if (this.currentUser) {
+      console.log('Utilisateur connecté:', this.currentUser);
+    } else {
+      console.warn('Utilisateur connecté introuvable.');
+    }
+  }
+
+  // Vérifier si l'utilisateur est ADMIN
+  isAdmin(): boolean {
+    return this.currentUser?.roles.some((role: any) => role.name === 'ADMIN');
+  }
+  
 
  
 
