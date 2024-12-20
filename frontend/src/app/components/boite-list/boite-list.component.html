@@ -55,10 +55,7 @@
       <th mat-header-cell *matHeaderCellDef> Actions </th>
       <td mat-cell *matCellDef="let boite">
         <div class="action-buttons">
-          <button mat-icon-button color="primary" matTooltip="Modifier" aria-label="Update" (click)="onUpdate(boite)">
-          <!-- Bouton de mise à jour avec une icône -->
-          <button *ngIf="isAdmin()" mat-icon-button color="primary" matTooltip="Modifier"
-          aria-label="Update" (click)="onUpdate(boite)">
+          <button *ngIf="isAdmin()" mat-icon-button color="primary" matTooltip="Modifier" aria-label="Update" (click)="onUpdate(boite)">
             <mat-icon>edit</mat-icon>
           </button>
           <button mat-icon-button color="warn" matTooltip="Supprimer" aria-label="Delete" (click)="onDelete(boite.id)">
