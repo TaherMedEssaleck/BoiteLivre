@@ -1,7 +1,9 @@
 import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { BoiteService } from '../../services/boite.service';
 
 @Component({
   selector: 'app-user-dialog',
@@ -16,10 +18,13 @@ export class UserDialogComponent {
   rolesString: string = '';
   isEdit: boolean;
   selectedRole: string = '';
+  currentUser: any = null;
+  users: any[] = [];
  
 
   constructor(
     public dialogRef: MatDialogRef<UserDialogComponent>,
+    private boiteService: BoiteService, private router: Router, private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.isEdit = !!data.user;
@@ -70,7 +75,38 @@ export class UserDialogComponent {
     // Fermez le dialogue et retournez les données à la vue parente
     this.dialogRef.close(this.user);
   }
+
+  ngOnInit(): void {
   
+
+     // Récupérer tous les utilisateurs
+     this.boiteService.getAllUsers().subscribe(
+      (data) => {
+        this.users = data;
+        this.setCurrentUser(); // Identifier l'utilisateur connecté
+      },
+      (error) => {
+        console.error('Erreur lors de la récupération des utilisateurs', error);
+      }
+    );
+  }
+
   
+   // Détecter l'utilisateur connecté
+   setCurrentUser(): void {
+    const userId = localStorage.getItem('userId'); // ID de l'utilisateur stocké dans localStorage
+    if (userId) {
+      this.currentUser = this.users.find((user) => user.id === parseInt(userId, 10));
+    }
+    if (this.currentUser) {
+      console.log('Utilisateur connecté:', this.currentUser);
+    } else {
+      console.warn('Utilisateur connecté introuvable.');
+    }
+  }
+
+  isAdmin(): boolean {
+    return this.currentUser?.roles.some((role: any) => role.name === 'ADMIN');
+  }
   
 }

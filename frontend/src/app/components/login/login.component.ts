@@ -8,6 +8,9 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router'; // Import Router
 import { User } from '../../models/auth/user'; // Adjust path as needed
+import { UserDialogComponent } from '../user-dialog/user-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { UserService } from '../../services/user-service.service';
 
 @Component({
   selector: 'app-login',
@@ -27,7 +30,8 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router // Inject Router
+    private router: Router, // Inject Router
+    private userService: UserService, private dialog: MatDialog
   ) {}
 
   onSubmit(): void {
@@ -67,5 +71,19 @@ export class LoginComponent {
         }
       }
     );
+  }
+
+  openCreateDialog(): void {
+    const dialogRef = this.dialog.open(UserDialogComponent, {
+      data: { user: null },
+    });
+  
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.userService.createUser(result).subscribe(() => {
+          
+        });
+      }
+    });
   }
 }
