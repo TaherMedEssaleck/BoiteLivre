@@ -67,18 +67,21 @@
       </div>
   
       <!-- Rôles -->
-      <div class="col-md-6" >
-        <label for="roles" class="form-label">Rôles :</label>
-        <input
-          type="text"
-          id="roles"
-          class="form-control"
-          [(ngModel)]="rolesString"
-          name="roles"
-          required
-          placeholder="Séparez les rôles par des virgules (e.g., ADMIN,USER)"
-        />
-      </div>
+<div class="col-md-6">
+  <label for="roles" class="form-label">Rôles :</label>
+  <select
+    id="roles"
+    class="form-control"
+    [(ngModel)]="selectedRole"
+    name="roles"
+    required
+  >
+    <option value="" disabled selected>Choisissez un rôle</option>
+    <option value="USER">USER</option>
+    <option value="ADMIN">ADMIN</option>
+  </select>
+</div>
+
   
       <!-- Submit Button -->
       <div class="col-12 text-center">

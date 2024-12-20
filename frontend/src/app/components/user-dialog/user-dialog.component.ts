@@ -15,6 +15,8 @@ export class UserDialogComponent {
   user: any = {};
   rolesString: string = '';
   isEdit: boolean;
+  selectedRole: string = '';
+ 
 
   constructor(
     public dialogRef: MatDialogRef<UserDialogComponent>,
@@ -26,56 +28,49 @@ export class UserDialogComponent {
   }
 
   save(): void {
-    // Map rolesString to rolesArray or roleString with proper id assignment
-    const rolesArray = this.rolesString
-      .split(',')
-      .map((roleName: string) => {
-        const trimmedRoleName = roleName.trim().toUpperCase();
-        return {
-          id: trimmedRoleName === 'ADMIN' ? 1 : trimmedRoleName === 'USER' ? 2 : null,
-          name: trimmedRoleName,
-        };
-      });
-  
-    const rolesNamesArray = this.rolesString
-      .split(',')
-      .map((roleName: string) => roleName.trim().toUpperCase());
-  
-    // Validate rolesArray to ensure all roles have valid IDs
-    const hasInvalidRoles = rolesArray.some((role) => role.id === null);
-    if (hasInvalidRoles) {
-      alert('Invalid role(s) detected. Only "ADMIN" or "USER" are allowed.');
+    // Vérifiez que selectedRole est défini
+    if (!this.selectedRole || (this.selectedRole !== 'ADMIN' && this.selectedRole !== 'USER')) {
+      alert('Invalid role selected. Only "ADMIN" or "USER" are allowed.');
       return;
     }
   
+    // Créez l'objet rôle avec l'ID et le nom
+    const roleObject = {
+      id: this.selectedRole === 'ADMIN' ? 1 : 2,
+      name: this.selectedRole,
+    };
+  
     if (this.isEdit) {
-      // For edit: use "roles" and include ID
+      // Validation pour l'édition
       if (!this.user.id) {
         alert('Missing user ID for editing.');
         return;
       }
   
+      // Assignation des rôles avec l'objet sélectionné
       this.user = {
         ...this.user,
-        roles: rolesArray, // "roles" field for edit
+        roles: [roleObject], // Utilisez un tableau contenant le rôle pour l'édition
       };
     } else {
-      // For create: use "role" and include only role names
+      // Validation pour la création
       if (!this.user.password) {
         alert('Password is required for creating a new user.');
         return;
       }
   
+      // Assignation du rôle sans l'ID
       this.user = {
         ...this.user,
-        password: this.user.password, // Include the password for create
-        role: rolesNamesArray, // "role" field for create
+        password: this.user.password,
+        role: [this.selectedRole], // Utilisez un tableau contenant le nom du rôle
       };
     }
   
-    // Close the dialog and send the user data back to the parent component
+    // Fermez le dialogue et retournez les données à la vue parente
     this.dialogRef.close(this.user);
   }
+  
   
   
 }

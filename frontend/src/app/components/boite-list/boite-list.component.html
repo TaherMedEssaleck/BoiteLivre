@@ -59,13 +59,13 @@
           <button *ngIf="isAdmin()" mat-icon-button color="primary" matTooltip="Modifier" aria-label="Update" (click)="onUpdate(boite)">
             <mat-icon>edit</mat-icon>
           </button>
-          <button mat-icon-button color="warn" matTooltip="Supprimer" aria-label="Delete" (click)="onDelete(boite.id)">
+          <button *ngIf="isAdmin()" mat-icon-button color="warn" matTooltip="Supprimer" aria-label="Delete" (click)="onDelete(boite.id)">
             <mat-icon>delete</mat-icon>
           </button>
           <button mat-icon-button color="accent" matTooltip="Déclarer une réservation" aria-label="Déclarer une réservation" (click)="declareReservation(boite)">
             <mat-icon>event_available</mat-icon>
           </button>
-          <button mat-icon-button color="primary" matTooltip="Afficher les Réservations" aria-label="Afficher les Réservations" (click)="openReservationsDialog(boite.id)">
+          <button *ngIf="isAdmin()" mat-icon-button color="primary" matTooltip="Afficher les Réservations" aria-label="Afficher les Réservations" (click)="openReservationsDialog(boite.id)">
             <mat-icon>list_alt</mat-icon>
           </button>
         </div>
